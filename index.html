@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rimm Gambling Beta Test</title>
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <div class="bg-effects">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+</div>
+
+
+<div class="header">
+  <div class="logo">
+    🎮 RIMM666GAMBLING
+  </div>
+<div class="top-right">
+
+<div class="daily-btn" onclick="openDaily()">🎁</div>
+<div class="daily-btn" onclick="logout()" title="Logout" style="font-size:18px;">🚪</div>
+<div class="wallet">
+💰 Balance: $
+<span id="balance">1000</span>
+    </div>
+  </div>
+</div>
+
+<div id="liveFeed"></div>
+
+<div class="nav">
+
+<button id="btnHome"
+onclick="goHome()">
+🏠 Home
+</button>
+<button id="btnHistory"
+onclick="openHistory()">
+📜 History
+</button>
+</div>
+
+
+<div id="screenContainer">
+
+<div id="lobbyScreen">
+<div class="lobby-hero">
+<div class="lobby-logo">🎰 RIMM666</div>
+<div class="lobby-sub">Welcome to futuristic gambling experience</div>
+</div>
+
+<div class="lobby-grid">
+
+<div class="lobby-card"onclick="enterGame('tower')">
+<div class="lobby-icon">🗼</div>
+<div class="lobby-name">Tower</div>
+
+</div>
+<div class="lobby-card"onclick="enterGame('mines')">
+<div class="lobby-icon">💣</div>
+<div class="lobby-name">Mines
+</div>
+
+</div>
+<div class="lobby-card"onclick="enterGame('crash')">
+<div class="lobby-icon">🚀</div>
+<div class="lobby-name">Crash
+</div>
+
+</div>
+<div class="lobby-card"onclick="enterGame('gacha')">
+<div class="lobby-icon">🎰</div>
+<div class="lobby-name">Gacha</div>
+</div>
+
+<div class="lobby-card" onclick="enterGame('dice')">
+  <div class="lobby-icon">🎲</div>
+  <div class="lobby-name">Dice</div>
+</div>
+<div class="lobby-card" onclick="enterGame('plinko')">
+  <div class="lobby-icon">🔵</div>
+  <div class="lobby-name">Plinko</div>
+</div>
+<div class="lobby-card" onclick="enterGame('chicken')">
+  <div class="lobby-icon">🐔</div>
+  <div class="lobby-name">Chicken</div>
+</div>
+
+
+</div>
+</div>
+
+<div id="gameScreen" class="game hidden">
+  <div class="multi" id="multi">1.00x</div>
+  <div class="profit" id="profit">Profit: 0</div>
+  <div id="grid" class="grid"></div>
+  </div>
+
+<!-- PANELS -->
+<div id="panelGacha" class="panel hidden">
+<input id="betGacha" type="number" placeholder="Bet per box">
+<div class="row-btn">
+<button class="start" onclick="startGacha()">Start</button>
+</div>
+</div>
+
+<div id="panelTower" class="panel hidden">
+<input id="betTower" type="number" placeholder="Bet">
+<input id="autoTower" type="number" placeholder="Auto Cashout (x)">
+<select id="tileCount">
+<option value="5">Extreme</option>
+<option value="4">Hard</option>
+<option value="3">Medium</option>
+<option value="2">Easy</option>
+</select>
+<div class="row-btn">
+<button class="start" onclick="startTower()">Start</button>
+<button class="cash" onclick="cashout()">Cashout</button>
+</div>
+</div>
+
+<div id="panelMines" class="panel hidden">
+<input id="betMines" type="number" placeholder="Bet">
+<input id="autoMines" type="number" placeholder="Auto Cashout (x)">
+<input id="bombCount" type="number" placeholder="Bomb Count" value="3">
+<div class="row-btn">
+<button class="start" onclick="startMines()">Start</button>
+<button class="cash" onclick="cashout()">Cashout</button>
+</div>
+</div>
+
+<div id="panelCrash" class="panel hidden">
+<input id="betCrash" type="number" placeholder="Bet">
+<input id="autoCrash" type="number" placeholder="Auto Cashout (x)">
+<div class="row-btn">
+<button class="start" onclick="startCrash()">Start</button>
+<button class="cash" onclick="cashoutCrash()">Cashout</button>
+</div>
+</div>
+
+<div id="panelDice" class="panel hidden">
+  <input id="betDice" type="number" placeholder="Bet amount">
+  <div class="row-btn">
+    <button onclick="startDice('high')" style="background:#22c55e;color:black">⬆ LEBIH TINGGI</button>
+    <button onclick="startDice('low')" style="background:#ef4444">⬇ LEBIH RENDAH</button>
+    <button onclick="startDice('equal')" style="background:#f97316;color:black">= SAMA (5x)</button>
+  </div>
+</div>
+
+ 
+<div id="panelPlinko" class="panel hidden">
+  <input id="betPlinko" type="number" placeholder="Bet">
+  <div class="row-btn">
+    <button class="start" onclick="dropPlinko()">🔵 Drop Ball</button>
+  </div>
+</div>
+ 
+<div id="panelChicken" class="panel hidden">
+  <input id="betChicken" type="number" placeholder="Bet">
+  <div class="row-btn">
+    <button class="start" onclick="startChicken()">Start</button>
+  </div>
+  <div class="row-btn">
+    <button class="start" style="background:#f97316" onclick="stepChicken()">🐔 JALAN</button>
+    <button class="cash" onclick="cashoutChicken()">Cashout</button>
+  </div>
+</div>
+
+
+  <div id="historyBox" class="screen hidden">
+    <div class="history-top">
+      <div class="profile-mini">
+        <div class="profile-name">
+          👤 Beta Tester
+        </div>
+        <div id="profileInfo"></div>
+      </div>
+      <button onclick="renderHistory('all')">All</button>
+      <button onclick="renderHistory('gacha')">Gacha</button>
+      <button onclick="renderHistory('tower')">Tower</button>
+      <button onclick="renderHistory('mines')">Mines</button>
+      <button onclick="renderHistory('crash')">Crash</button>
+      <button onclick="renderHistory('dice')">Dice</button>       
+      <button onclick="renderHistory('plinko')">Plinko</button>   
+      <button onclick="renderHistory('chicken')">Chicken</button>  
+    </div>
+    <div id="historyList"></div>
+    
+</div>
+</div>
+
+
+<div id="popup" class="popup hidden">
+<div class="popup-box" id="popupText"></div>
+</div>
+
+<div id="toastBox"></div>
+<div id="decisionPopup"
+class="popup hidden">
+
+<div class="popup-box">
+
+<h2>⚠️ Cashout?</h2>
+
+<p>
+Multiplier sudah tinggi.
+Lanjut atau ambil profit?
+</p>
+
+<div class="row-btn">
+
+<button class="cash"
+onclick="cashoutCrash()">
+Cashout
+</button>
+
+<button class="start"
+onclick="closeDecision()">
+Lanjut
+</button>
+
+</div>
+
+</div>
+</div>
+
+<div id="dailyPopup"
+class="popup hidden">
+
+<div class="popup-box daily-box">
+
+<div class="daily-header">
+
+<h2>🎁 DAILY REWARD</h2>
+
+<div id="dailyMiniTimer">
+24:00:00
+</div>
+
+</div>
+
+<div id="dailyGrid"
+class="daily-grid">
+</div>
+
+<div id="dailyTimer"
+class="daily-timer">
+Loading...
+</div>
+
+</div>
+</div>
+
+<div id="particleLayer"></div>
+
+<script type="module" src="./js/app.js"></script>
+
+</body>
+</html>

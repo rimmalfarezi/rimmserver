@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RIMM666 — Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#020617;--card:#0f172a;--card2:#1e293b;
+    --primary:#3b82f6;--success:#22c55e;--danger:#ef4444;
+    --text:#fff;--muted:#94a3b8;
+    --radius:14px;
+  }
+
+  body{
+    background:radial-gradient(circle at 20% 20%,rgba(59,130,246,.12),transparent 50%),
+               radial-gradient(circle at 80% 80%,rgba(34,197,94,.10),transparent 50%),
+               var(--bg);
+    min-height:100vh;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    font-family:'Inter',sans-serif;
+    color:var(--text);
+    padding:20px;
+    overflow:hidden;
+  }
+
+  /* Orbs */
+  .orb{position:fixed;border-radius:50%;filter:blur(80px);opacity:.15;pointer-events:none;}
+  .o1{width:300px;height:300px;background:#3b82f6;top:-80px;left:-80px;animation:float 10s ease-in-out infinite;}
+  .o2{width:250px;height:250px;background:#22c55e;bottom:-80px;right:-60px;animation:float 12s ease-in-out infinite reverse;}
+  .o3{width:200px;height:200px;background:#9333ea;top:50%;left:50%;animation:float 8s ease-in-out infinite 2s;}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+
+  .logo{
+    font-family:'Rajdhani',sans-serif;
+    font-size:42px;font-weight:700;
+    background:linear-gradient(135deg,#22c55e,#3b82f6,#9333ea);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    margin-bottom:8px;text-align:center;
+    letter-spacing:2px;
+  }
+  .logo-sub{color:var(--muted);font-size:14px;text-align:center;margin-bottom:32px;}
+
+  .card{
+    background:rgba(15,23,42,.85);
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:22px;
+    padding:32px;
+    width:100%;max-width:400px;
+    backdrop-filter:blur(20px);
+    box-shadow:0 25px 60px rgba(0,0,0,.4);
+    animation:cardIn .4s cubic-bezier(.22,.68,0,1.2);
+  }
+  @keyframes cardIn{from{opacity:0;transform:translateY(30px) scale(.96)}to{opacity:1;transform:none}}
+
+  /* Tabs */
+  .tabs{display:flex;gap:6px;margin-bottom:28px;background:var(--card2);border-radius:12px;padding:5px;}
+  .tab{
+    flex:1;padding:10px;border:none;border-radius:9px;
+    background:transparent;color:var(--muted);
+    font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
+    cursor:pointer;transition:.2s;
+  }
+  .tab.active{background:var(--primary);color:#fff;box-shadow:0 0 16px rgba(59,130,246,.4);}
+
+  /* Form */
+  .form{display:flex;flex-direction:column;gap:14px;}
+  .form-group{display:flex;flex-direction:column;gap:6px;}
+  label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+
+  input{
+    padding:13px 16px;
+    background:var(--card2);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:10px;
+    color:var(--text);
+    font-family:'Inter',sans-serif;font-size:14px;
+    outline:none;transition:.2s;
+  }
+  input:focus{border-color:rgba(59,130,246,.5);box-shadow:0 0 0 3px rgba(59,130,246,.1);}
+  input::placeholder{color:var(--muted);}
+
+  .btn{
+    padding:14px;border:none;border-radius:12px;
+    font-family:'Inter',sans-serif;font-size:15px;font-weight:700;
+    cursor:pointer;transition:.2s;margin-top:4px;
+    position:relative;overflow:hidden;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,var(--primary),#6366f1);
+    color:#fff;
+    box-shadow:0 0 25px rgba(59,130,246,.3);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 35px rgba(59,130,246,.5);}
+  .btn-primary:active{transform:scale(.98);}
+  .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+  .divider{
+    display:flex;align-items:center;gap:12px;
+    color:var(--muted);font-size:12px;margin:4px 0;
+  }
+  .divider::before,.divider::after{
+    content:"";flex:1;height:1px;background:rgba(255,255,255,.07);
+  }
+
+  /* Alert */
+  .alert{
+    padding:12px 16px;border-radius:10px;
+    font-size:13px;font-weight:600;
+    display:none;margin-bottom:4px;
+  }
+  .alert.error{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5;}
+  .alert.success{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:#86efac;}
+  .alert.show{display:block;animation:alertIn .2s ease;}
+  @keyframes alertIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+  /* Loading spinner */
+  .spinner{
+    display:inline-block;width:16px;height:16px;
+    border:2px solid rgba(255,255,255,.3);
+    border-top-color:#fff;border-radius:50%;
+    animation:spin .6s linear infinite;
+    margin-right:8px;vertical-align:middle;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .hidden{display:none!important;}
+
+  .footer-note{
+    margin-top:20px;text-align:center;
+    color:var(--muted);font-size:12px;
+  }
+</style>
+</head>
+<body>
+
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+<div class="orb o3"></div>
+
+<div class="logo">🎰 RIMM666</div>
+<div class="logo-sub">Futuristic gambling simulation</div>
+
+<div class="card">
+  <div class="tabs">
+    <button class="tab active" id="tabLogin" onclick="switchTab('login')">Login</button>
+    <button class="tab" id="tabRegister" onclick="switchTab('register')">Register</button>
+  </div>
+
+  <div id="alertBox" class="alert"></div>
+
+  <!-- LOGIN -->
+  <div id="formLogin" class="form">
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="email@kamu.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="••••••••">
+    </div>
+    <button class="btn btn-primary" id="btnLogin" onclick="handleLogin()">
+      Masuk
+    </button>
+  </div>
+
+  <!-- REGISTER -->
+  <div id="formRegister" class="form hidden">
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="regUsername" placeholder="nama kamu" maxlength="20">
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="regEmail" placeholder="email@kamu.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="regPassword" placeholder="min 6 karakter">
+    </div>
+    <button class="btn btn-primary" id="btnRegister" onclick="handleRegister()">
+      Daftar Sekarang
+    </button>
+  </div>
+</div>
+
+<div class="footer-note">Balance awal: $1,000 🎁</div>
+
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const supabase = createClient(
+  "https://jpaldhwgcifxxqpnimzp.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwYWxkaHdnY2lmeHhxcG5pbXpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2OTg0ODUsImV4cCI6MjA5NTI3NDQ4NX0.nfpQvnsK7Ts8HjEv0aQ7QSf_Gp5HhFBz6x00scduhb0"
+);
+
+// Cek kalau sudah login — langsung redirect
+const { data: { session } } = await supabase.auth.getSession();
+if (session) window.location.href = "index.html";
+
+// ===== UI HELPERS =====
+function showAlert(msg, type="error") {
+  const el = document.getElementById("alertBox");
+  el.className = `alert ${type} show`;
+  el.innerText = msg;
+}
+
+function setLoading(btnId, loading) {
+  const btn = document.getElementById(btnId);
+  if (loading) {
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spinner"></span>Loading...`;
+  } else {
+    btn.disabled = false;
+    btn.innerHTML = btnId === "btnLogin" ? "Masuk" : "Daftar Sekarang";
+  }
+}
+
+// ===== TAB SWITCH =====
+window.switchTab = function(tab) {
+  document.getElementById("alertBox").className = "alert";
+  document.getElementById("formLogin").classList.toggle("hidden", tab !== "login");
+  document.getElementById("formRegister").classList.toggle("hidden", tab !== "register");
+  document.getElementById("tabLogin").classList.toggle("active", tab === "login");
+  document.getElementById("tabRegister").classList.toggle("active", tab === "register");
+};
+
+// ===== LOGIN =====
+window.handleLogin = async function() {
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+
+  if (!email || !password) { showAlert("Isi semua field dulu!"); return; }
+
+  setLoading("btnLogin", true);
+  try {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    showAlert("Login berhasil! Mengalihkan...", "success");
+    setTimeout(() => window.location.href = "index.html", 800);
+  } catch(e) {
+    showAlert(e.message === "Invalid login credentials" ? "Email atau password salah!" : e.message);
+    setLoading("btnLogin", false);
+  }
+};
+
+// ===== REGISTER =====
+window.handleRegister = async function() {
+  const username = document.getElementById("regUsername").value.trim();
+  const email = document.getElementById("regEmail").value.trim();
+  const password = document.getElementById("regPassword").value;
+
+  if (!username || !email || !password) { showAlert("Isi semua field dulu!"); return; }
+  if (username.length < 3) { showAlert("Username minimal 3 karakter!"); return; }
+  if (password.length < 6) { showAlert("Password minimal 6 karakter!"); return; }
+
+  setLoading("btnRegister", true);
+  try {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { username } }
+    });
+    if (error) throw error;
+    showAlert("Registrasi berhasil! Cek email untuk verifikasi, lalu login.", "success");
+    setLoading("btnRegister", false);
+  } catch(e) {
+    showAlert(e.message.includes("already") ? "Email sudah terdaftar!" : e.message);
+    setLoading("btnRegister", false);
+  }
+};
+
+// Enter key support
+document.addEventListener("keydown", e => {
+  if (e.key !== "Enter") return;
+  const isLogin = !document.getElementById("formLogin").classList.contains("hidden");
+  isLogin ? window.handleLogin() : window.handleRegister();
+});
+</script>
+
+</body>
+</html>
